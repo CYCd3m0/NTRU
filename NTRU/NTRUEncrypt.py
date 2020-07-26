@@ -48,7 +48,7 @@ class NTRUKey():
             c = (r.scale(self._P.get_p())*self._h+m) % self._P.get_q()  # Type of c is Polynomial
             tmp = c._coeff
             for i in tmp:
-                e += i.to_bytes(1, byteorder='big', signed=True)        # Type of e is byte
+                e += i.to_bytes(2, byteorder='big', signed=True)        # Type of e is byte
             return e
         else:
             raise Exception("m is too large, must be equal or under size %d" % N)
@@ -59,8 +59,8 @@ class NTRUKey():
             raise Exception("Private key not found.")
 
         coeff_e = []
-        for i in range(len(e)):
-            coeff_e.append(int.from_bytes(bytes([e[i]]), byteorder='big', signed=True))
+        for i in range(len(e)//2):
+            coeff_e.append(int.from_bytes(bytes([e[i*2+0]]) + bytes([e[i*2+1]]), byteorder='big', signed=True))
         e = Polynomial(coeff_e, len(coeff_e))
 
         if e._N <= self._P.get_N():
