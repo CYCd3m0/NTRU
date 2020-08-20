@@ -53,6 +53,18 @@ class NTRUKey():
         else:
             raise Exception("m is too large, must be equal or under size %d" % N)
 
+    def encrypt_to_poly(self, m):
+        """ Type of m is byte """
+        coeff_m = [int(x) for x in bin(bytes_to_long(m))[::-1][:-2]]
+        m = Polynomial(coeff_m, len(coeff_m))
+
+        if m._N <= self._P.get_N():
+            r = self._P.generate_poly_r()
+            c = (r.scale(self._P.get_p())*self._h+m) % self._P.get_q()  # Type of c is Polynomial
+            return c._coeff                                             # Type of c._coeff is list
+        else:
+            raise Exception("m is too large, must be equal or under size %d" % N)
+
     def decrypt(self, e):
         """ Type of e is byte """
         if self._f is None or self._g is None:
@@ -78,6 +90,32 @@ class NTRUKey():
             for i in range(len(b._coeff)):
                 m += (2**i) * b._coeff[i]
 
+            return long_to_bytes(m)
+        else:
+            raise Exception("e is too large, must be equal or under size %d" % self._P.get_N())
+
+    def decrypt_from_poly(self, e):
+        """ Type of e is list """
+        if self._f is None or self._g is None:
+            raise Exception("Private key not found.")
+        
+        e = Polynomial(e, len(e))
+
+        if e._N <= self._P.get_N():
+            if not self._fp:
+                self._fp = inverse_3(self._f, self._P.get_N())
+            if not self._fq:
+                self._fq = inverse_2_power(self._f, self._P.get_N(), int(log2(self._P.get_q())))
+
+            assert(self._h == self._fq * self._g)
+
+            a = (self._f * e) % self._P.get_q()
+            b = (self._fp * a) % self._P.get_p()
+
+            m = 0
+            for i in range(len(b._coeff)):
+                m += (2**i) * b._coeff[i]
+            
             return long_to_bytes(m)
         else:
             raise Exception("e is too large, must be equal or under size %d" % self._P.get_N())
