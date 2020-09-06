@@ -2,11 +2,15 @@
 
 NTRUEncrypt module in Python3
 
+<br/>
+
 ## Requirements
 
 ```bash
 pip3 install pycryptodome
 ```
+
+<br/>
 
 ## Class attribute
 
@@ -39,6 +43,8 @@ pip3 install pycryptodome
   * _fp
 
   * _fq
+
+<br/>
 
 ## Functions
 
