@@ -25,10 +25,16 @@ pip3 install pycryptodome
     > parameter set
 
   * _h
+  
+    > public key
 
   * _f
+  
+    > private key
 
   * _g
+  
+    > private key
 
   * _fp
 
