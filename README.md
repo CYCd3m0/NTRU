@@ -21,7 +21,7 @@ pip3 install pycryptodome
 * NTRUKey
 
   * _P
-  > parameter set
+   > parameter set
 
   * _h
 
