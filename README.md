@@ -78,7 +78,8 @@ pip3 install pycryptodome
 
 ## Reference
 
- * [pyNTRU](https://github.com/smarky7CD/PyNTRU)
+  * [pyNTRU](https://github.com/smarky7CD/PyNTRU)
 
- * https://upcommons.upc.edu/bitstream/handle/2099.1/8522/memoria.pdf
+  * [NTRU software implementation for constrained devices](https://upcommons.upc.edu/bitstream/handle/2099.1/8522/memoria.pdf)
 
+  * [Almost Inverse Algorithm](https://assets.onboardsecurity.com/static/downloads/NTRU/resources/NTRUTech014.pdf)

@@ -18,7 +18,7 @@ class Polynomial():
     def __mul__(self, other):
         """ Convolution product of truncated polynomial ring """
         if self.isZero() or other.isZero():
-            return Zero()
+            return Polynomial([0], N)
         
         tmp_coeff = [0 for _ in range(self._N*2 - 1)]
         for power1, coeff1 in enumerate(self._coeff):
@@ -51,14 +51,6 @@ class Polynomial():
     def __ne__(self, other):
         return self.deg() != other.deg() or not(all([x==y for (x,y) in zip(self._coeff, other._coeff)]))
 
-    def tail_coeff(self):
-        """ Return coeff of power 0 """
-        return self._coeff[0]
-       
-    def lead_coeff(self):
-        """ Return coeff of highest power """
-        return self._coeff[-1]
-
     def deg(self):
         return len(self) - 1
     
@@ -85,21 +77,21 @@ def strip(L, e=0):
 """ Functions for polynomial """
 
 def inverse_2(a, N):
-    """ Fast inverse algorithm mod 2 """
+    """ Almost Inverse Algorithm mod 2 """
     k = 0
-    b, c = One(N), Zero(N)
-    f, g = a, RingPoly(N)
+    f = a
+    g = RingPoly(N)
+    b = Polynomial([1], N)
+    c = Polynomial([0], N)
     
     while True:
-        while f.tail_coeff() == 0:
-            f_list = list(f)
-            f = Polynomial(f_list[1:], N)
-            c_list = list(c)
-            c = Polynomial([0] + c_list, N)
-            k+=1
+        while f._coeff[0] == 0:
+            f = Polynomial(list(f)[1:], N)
+            c = Polynomial([0] + list(c), N)
+            k += 1
             
-        if f == Polynomial([1], N):
-            return b*Xnk(N,k)
+        if f._coeff == [1]:
+            return b * Xnk(N, k)
 
         if f.deg() < g.deg():
             f,g = g,f
@@ -109,52 +101,43 @@ def inverse_2(a, N):
         b = (b+c) % 2
         
 def inverse_2_power(a, N, r):
-    """ Fast inverse algorithm mod 2^r """
-    b = inverse_2(a,N)
+    """ Almost Inverse Algorithm mod 2^r """
+    b = inverse_2(a, N)
     q = 2
-    
     while q < 2**r:
         q = q**2
         b = (b * (Polynomial([2], N) - (a*b))) % q
     return b
 
 def inverse_3(a, N):
-    """ Fast inverse algorithm mod 3 """
+    """ Almost Inverse Algorithm mod 3 """
     k = 0
-    b, c = One(N), Zero(N)
-    f, g = a, RingPoly(N)
+    f = a
+    g = RingPoly(N)
+    b = Polynomial([1], N)
+    c = Polynomial([0], N)
 
     while True:
-        while f.tail_coeff() == 0:
-            f_list = list(f)
-            f = Polynomial(f_list[1:], N)
-            c_list = list(c)
-            c = Polynomial([0] + c_list, N)
+        while f._coeff[0] == 0:
+            f = Polynomial(list(f)[1:], N)
+            c = Polynomial([0] + list(c), N)
             k+=1
         
-        if f == Polynomial([-1], N):
-            return -b*Xnk(N,k)
-        if f == Polynomial([1], N):
-            return b*Xnk(N,k)
+        if f._coeff == [1]:
+            return b * Xnk(N,k)
+        elif f._coeff == [-1]:
+            return -b * Xnk(N,k)
 
         if f.deg() < g.deg():
             f,g = g,f
             b,c = c,b
 
-        if f.tail_coeff() == g.tail_coeff():
+        if f._coeff[0] == g._coeff[0]:
             f = (f-g) % 3
             b = (b-c) % 3
         else:
             f = (f+g) % 3
             b = (b+c) % 3
-            
-def Zero(N):
-    """ Generate zero polynomial """
-    return Polynomial([0], N)
-
-def One(N):
-    """ Generate one polynomial """
-    return Polynomial([1], N)
 
 def Xnk(N, k):
     """ Generate X^(N-k) polynomial """
