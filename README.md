@@ -8,6 +8,30 @@ NTRUEncrypt module in Python3
 pip3 install pycryptodome
 ```
 
+## Class attribute
+
+* Polynomial
+
+  * _coeff
+
+  * _N
+
+<br/>
+
+* NTRUKey
+
+  * _P
+
+  * _h
+
+  * _f
+
+  * _g
+
+  * _fp
+
+  * _fq
+
 ## Functions
 
 * ```NTRUEncrypt.generate_key(params)```
