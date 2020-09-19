@@ -19,7 +19,7 @@ print('Success !')
 m = os.urandom(16)
 c = pub_key.encrypt(m)
 m2 = pri_key.decrypt(c)
-assert(m == m2)
+assert(m == m2) , 'bad NTRU key'
 print('Success !')
 
 
@@ -27,5 +27,5 @@ print('Success !')
 m = os.urandom(16)
 c = pub_key.encrypt_to_poly(m)
 m2 = pri_key.decrypt_from_poly(c)
-assert(m == m2)
+assert(m == m2) , 'bad NTRU key'
 print('Success !')
